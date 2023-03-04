@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '72412029840',
     projectId: 'stat-tracker-team-gen',
     storageBucket: 'stat-tracker-team-gen.appspot.com',
-    iosClientId: '72412029840-eb2u6nl0cv0laij029iv6f4oiqlfg2k8.apps.googleusercontent.com',
+    iosClientId:
+        '72412029840-eb2u6nl0cv0laij029iv6f4oiqlfg2k8.apps.googleusercontent.com',
     iosBundleId: 'com.example.stat',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '72412029840',
     projectId: 'stat-tracker-team-gen',
     storageBucket: 'stat-tracker-team-gen.appspot.com',
-    iosClientId: '72412029840-eb2u6nl0cv0laij029iv6f4oiqlfg2k8.apps.googleusercontent.com',
+    iosClientId:
+        '72412029840-eb2u6nl0cv0laij029iv6f4oiqlfg2k8.apps.googleusercontent.com',
     iosBundleId: 'com.example.stat',
   );
 }
