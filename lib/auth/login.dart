@@ -59,7 +59,9 @@ class _LoginFormState extends State<LoginForm> {
                   hintText: 'Enter Email',
                 ),
                 validator: (value) {
-                  if (value!.isEmpty || !value.contains('@')) {
+                  if (value!.isEmpty ||
+                      !value.contains('@') ||
+                      !value.contains(".com")) {
                     return 'Please Enter valid Email';
                   } else {
                     return null;

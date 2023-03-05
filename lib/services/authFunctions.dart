@@ -41,7 +41,7 @@ class AuthServices {
             SnackBar(content: Text('No user Found with this Email')));
       } else if (e.code == 'wrong-password') {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Password did not match')));
+            .showSnackBar(SnackBar(content: Text('Incorrect Password')));
       }
     }
   }
