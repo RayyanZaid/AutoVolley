@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 20.0),
             child: Text(
-              'Hello ',
+              'Hello!',
               style: TextStyle(
                 fontSize: screenWidth * 0.1,
                 fontWeight: FontWeight.bold,
@@ -38,11 +38,19 @@ class Home extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0),
-            child: Text(
-              '${snapshot.data?.displayName}',
-              style: TextStyle(
-                fontSize: screenWidth * 0.1,
-                fontWeight: FontWeight.bold,
+            child: Center(
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  snapshot.data!.displayName != null
+                      ? '${snapshot.data!.displayName}'
+                      : 'Welcome to your account',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.1,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
