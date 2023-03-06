@@ -34,23 +34,24 @@ class FirestoreServices {
     }
   }
 
-  static getListOfPlayers(String uid) async {
+  static Future<Map<String, dynamic>> getListOfPlayers(String uid) async {
     final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection('players')
         .get();
 
-    final players = [];
+    final Map<String, dynamic> playersMap = {};
 
     for (var doc in querySnapshot.docs) {
-      final data = doc.data()
-          as Map<String, dynamic>; // Cast data to Map<String, dynamic>
-      players.add(data['name']); // Add the player name to the array
+      final data = doc.data() as Map<String, dynamic>;
+      final name = data['name'] as String;
+      final playerData = {...data}
+        ..remove('name'); // make a copy of the data and remove the 'name' field
+      playersMap[name] =
+          playerData; // add the data to the map using the name as the key
     }
 
-    debugPrint(players.toString()); // Print the array of player names
-
-    return players;
+    return playersMap;
   }
 }
