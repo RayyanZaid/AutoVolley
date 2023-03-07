@@ -4,6 +4,7 @@ import './addNewPlayer.dart';
 import './playerStats.dart';
 import '../classes/Player.dart';
 import '../services/firebaseFunctions.dart';
+import './playerSelection.dart';
 
 class Home extends StatelessWidget {
   final AsyncSnapshot<User?> snapshot;
@@ -85,7 +86,31 @@ class Home extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          // get the list of players from the database
+                          // sort that list
+
+                          // put it in as a parameter for the PlayerStats page
+                          List<Player> playerList = [];
+                          Map<String, dynamic> firebaseList =
+                              await FirestoreServices.getListOfPlayers(
+                                  snapshot.data!.uid);
+                          debugPrint(firebaseList.toString());
+
+                          firebaseList.forEach((key, value) {
+                            Player p = Player(
+                                key,
+                                value["wins"].toString(),
+                                value["losses"].toString(),
+                                value["winPercentage"].toString());
+                            playerList.add(p);
+                          });
+
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PlayerSelection(playerList: playerList);
+                          }));
+                        },
                         child: Text('Play Match'),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(200.0, 60.0),

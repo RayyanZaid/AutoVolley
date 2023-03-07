@@ -1,14 +1,21 @@
+import 'package:flutter/material.dart';
+
 class Player {
   String name;
   String wins;
   String losses;
   String wps;
   double worth = 0.0;
+  bool isChosen = false;
 
   Player(this.name, this.wins, this.losses, this.wps) {
-    // worth =
-    //     double.parse(wps) * (1 + (int.parse(wins) - int.parse(losses)) / 25) +
-    //         (int.parse(wins) - int.parse(losses)) / 200;
+    try {
+      worth =
+          double.parse(wps) * (1 + (int.parse(wins) - int.parse(losses)) / 25) +
+              (int.parse(wins) - int.parse(losses)) / 200;
+    } catch (e) {
+      debugPrint("Invalid");
+    }
   }
 
   bool operator <(Player other) {

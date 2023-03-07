@@ -1,10 +1,8 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stat/services/firebaseFunctions.dart';
 import '../classes/Player.dart';
 
+// ignore: must_be_immutable
 class PlayerStats extends StatelessWidget {
   List<Player> playerList;
   PlayerStats({Key? key, required this.playerList}) : super(key: key);
