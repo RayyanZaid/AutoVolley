@@ -47,4 +47,8 @@ class Player {
 
     return thisWP < otherWP;
   }
+
+  double getWorth() {
+    return worth;
+  }
 }

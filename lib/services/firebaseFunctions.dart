@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import '../classes/Player.dart';
 
 class FirestoreServices {
   static saveUser(String name, email, uid) async {
@@ -53,5 +54,50 @@ class FirestoreServices {
     }
 
     return playersMap;
+  }
+
+  static void updateWinsAndLosses(
+      String uid, List<Player> winningTeam, List<Player> losingTeam) async {
+    final userDocRef = FirebaseFirestore.instance.collection("users").doc(uid);
+
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      for (final player in winningTeam) {
+        final playerDocRef = userDocRef.collection("players").doc(player.name);
+        DocumentSnapshot doc = await playerDocRef.get();
+        final data = doc.data() as Map<String, dynamic>;
+        int wins = data['wins'] + 1;
+        int losses = data['losses'];
+
+        double winPercentageUnrounded =
+            ((wins * 1.0) / ((wins + losses) * 1.0));
+        double winPercentage =
+            double.parse(winPercentageUnrounded.toStringAsFixed(2));
+        transaction.update(
+            playerDocRef, {'wins': wins, 'winPercentage': winPercentage});
+
+        debugPrint(wins.toString());
+        debugPrint(losses.toString());
+        debugPrint(winPercentage.toString());
+      }
+
+      for (final player in losingTeam) {
+        final playerDocRef = userDocRef.collection("players").doc(player.name);
+        DocumentSnapshot doc = await playerDocRef.get();
+        final data = doc.data() as Map<String, dynamic>;
+        int wins = data['wins'];
+        int losses = data['losses'] + 1;
+
+        double winPercentageUnrounded =
+            ((wins * 1.0) / ((wins + losses) * 1.0));
+        double winPercentage =
+            double.parse(winPercentageUnrounded.toStringAsFixed(2));
+        transaction.update(
+            playerDocRef, {'losses': losses, 'winPercentage': winPercentage});
+
+        debugPrint(wins.toString());
+        debugPrint(losses.toString());
+        debugPrint(winPercentage.toString());
+      }
+    });
   }
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import "../classes/Player.dart";
-import "./home.dart";
+import "./playerStats.dart";
 import 'dart:math';
+import "../services/firebaseFunctions.dart";
 
 class MatchScreen extends StatefulWidget {
   final List<Player> team1;
   final List<Player> team2;
-
-  MatchScreen(this.team1, this.team2);
+  final String uid;
+  MatchScreen(this.team1, this.team2, this.uid);
 
   @override
   _MatchScreenState createState() => _MatchScreenState();
@@ -70,12 +71,13 @@ class MessageItem implements ListItem {
 class _MatchScreenState extends State<MatchScreen> {
   List<Player> team1 = [];
   List<Player> team2 = [];
-
+  String uid = "";
   @override
   void initState() {
     super.initState();
     team1 = widget.team1;
     team2 = widget.team2;
+    uid = widget.uid;
   }
 
   @override
@@ -90,7 +92,8 @@ class _MatchScreenState extends State<MatchScreen> {
     for (int i = 0; i < team1.length; i++) {
       String eachName = team1[i].name;
       double unrounded = double.parse(team1[i].wps) * 100;
-      String winP = ('Win%: ' + unrounded.roundToDouble().toString() + "%");
+      // String winP = ('Win%: ' + unrounded.roundToDouble().toString() + "%");
+      String winP = "";
       teams.add(MessageItem(eachName, winP));
     }
 
@@ -102,7 +105,8 @@ class _MatchScreenState extends State<MatchScreen> {
     for (int i = 0; i < team2.length; i++) {
       String eachName = team2[i].name;
       double unrounded = double.parse(team2[i].wps) * 100;
-      String winP = ('Win%: ' + unrounded.roundToDouble().toString() + "%");
+      // String winP = ('Win%: ' + unrounded.roundToDouble().toString() + "%");
+      String winP = "";
       teams.add(MessageItem(eachName, winP));
     }
     return Scaffold(
@@ -113,7 +117,7 @@ class _MatchScreenState extends State<MatchScreen> {
             textColor: Colors.black,
             onPressed: () =>
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MatchScreen([], []);
+              return PlayerStats(playerList: team1 + team2);
             })),
             child: Icon(
               Icons.home,
@@ -122,22 +126,62 @@ class _MatchScreenState extends State<MatchScreen> {
           actions: <Widget>[],
         ),
         body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/lightBG.jpg"),
-                    fit: BoxFit.cover)),
             child: ListView.builder(
-              padding: EdgeInsets.all(20),
-              itemCount: teams.length,
-              itemBuilder: (BuildContext context, int index) {
-                final player = teams[index];
+          padding: EdgeInsets.all(10),
+          itemCount: teams.length,
+          itemBuilder: (BuildContext context, int index) {
+            final player = teams[index];
+            if (index == 2) {
+              return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: ElevatedButton.icon(
+                      onPressed: () async {
+                        FirestoreServices.updateWinsAndLosses(
+                            uid, team1, team2);
+                      },
+                      icon: Icon(
+                        Icons.ads_click_rounded,
+                      ),
+                      label: Text(
+                        "Team 1",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 60, 186, 232),
+                      )));
+            }
 
-                return ListTile(
-                  title: player.buildTitle(context),
-                  subtitle: player.buildSubtitle(context),
-                );
-              },
-            )),
+            if (index == team1.length + 5) {
+              return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: ElevatedButton.icon(
+                      onPressed: () async {
+                        FirestoreServices.updateWinsAndLosses(
+                            uid, team2, team1);
+                      },
+                      icon: Icon(
+                        Icons.ads_click_rounded,
+                      ),
+                      label: Text(
+                        "Team 2",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 227, 27, 20),
+                      )));
+            }
+            return ListTile(
+              title: player.buildTitle(context),
+              subtitle: player.buildSubtitle(context),
+            );
+          },
+        )),
         bottomNavigationBar: ElevatedButton.icon(
             onPressed: () async {
               Navigator.pop(context);
@@ -158,5 +202,27 @@ class _MatchScreenState extends State<MatchScreen> {
               padding: EdgeInsets.only(top: 30, bottom: 30),
               backgroundColor: Color.fromARGB(255, 21, 177, 47),
             )));
+  }
+
+  void _showDialog(
+      BuildContext context, var message, var alert, Color bgColor) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: new Text(alert),
+          content: new Text(message),
+          actions: <Widget>[
+            new TextButton(
+              child: new Text("OK", style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

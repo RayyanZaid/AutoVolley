@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../algorithms/teams.dart';
 import '../classes/Player.dart';
 import './MatchScreen.dart';
+import '../algorithms/teams.dart' as teamAlgo;
 
 class PlayerSelect {
   String strPlayerName;
@@ -24,7 +26,7 @@ Map<String, dynamic> convertToMap(List<Player> playerList) {
 
   for (int i = 0; i < playerList.length; i++) {
     debugPrint(playerList[i].worth.toString());
-    map[playerList[i].name] = playerList[i].worth;
+    map[playerList[i].name] = playerList[i].worth.toString();
   }
 
   return map;
@@ -32,8 +34,13 @@ Map<String, dynamic> convertToMap(List<Player> playerList) {
 
 class PlayerSelection extends StatefulWidget {
   final List<Player> playerList;
+  final Map<String, dynamic> playerMapping;
+  final String uid;
 
-  PlayerSelection({required this.playerList});
+  PlayerSelection(
+      {required this.playerList,
+      required this.playerMapping,
+      required this.uid});
 
   @override
   _PlayerSelectionState createState() => _PlayerSelectionState();
@@ -42,11 +49,13 @@ class PlayerSelection extends StatefulWidget {
 class _PlayerSelectionState extends State<PlayerSelection> {
   List<PlayerSelect> _playerListLocal = [];
   Map<String, dynamic> playerMapping = {};
+  String uid = "";
   @override
   void initState() {
     super.initState();
     _playerListLocal = convertToPlayerSelect(widget.playerList);
-    playerMapping = convertToMap(widget.playerList);
+    playerMapping = widget.playerMapping;
+    uid = widget.uid;
   }
 
   @override
@@ -130,28 +139,36 @@ class _PlayerSelectionState extends State<PlayerSelection> {
               padding: EdgeInsets.only(top: 30, bottom: 30)),
           child: const Text('Start match'),
           onPressed: () {
+            debugPrint(uid);
+            debugPrint("hi");
             List<Player> team1 = [];
             List<Player> team2 = [];
-            int midIndex = (_playerListLocal.length / 2).floor();
+
+            List<Player> playersPlaying = [];
 
             for (int i = 0; i < _playerListLocal.length; i++) {
               if (_playerListLocal[i].isChosen == true) {
-                Player p =
-                    Player(_playerListLocal[i].strPlayerName, "1", "1", "1");
-                if (i <= midIndex) {
-                  team1.add(p);
+                String name = _playerListLocal[i].strPlayerName;
+                String wins = playerMapping[name]["wins"].toString();
+                String losses = playerMapping[name]["losses"].toString();
+                String wps = playerMapping[name]["winPercentage"].toString();
+                Player p = Player(name, wins, losses, wps);
+                if (i % 2 == 0) {
+                  playersPlaying.add(p);
                 } else {
-                  team2.add(p);
+                  playersPlaying.add(p);
                 }
               }
             }
 
-            if (team1.length < team2.length) {
-              team1.add(team2.removeAt(0));
-            }
+            Pair<List<Player>, List<Player>> teams =
+                teamAlgo.createTeams(playersPlaying);
+
+            team1 = teams.first;
+            team2 = teams.second;
 
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MatchScreen(team1, team2);
+              return MatchScreen(team1, team2, uid);
             }));
           }),
     );

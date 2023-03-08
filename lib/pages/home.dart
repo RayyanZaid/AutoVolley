@@ -108,7 +108,10 @@ class Home extends StatelessWidget {
 
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return PlayerSelection(playerList: playerList);
+                            return PlayerSelection(
+                                playerList: playerList,
+                                playerMapping: firebaseList,
+                                uid: snapshot.data!.uid);
                           }));
                         },
                         child: Text('Play Match'),
