@@ -138,6 +138,13 @@ class _MatchScreenState extends State<MatchScreen> {
                       onPressed: () async {
                         FirestoreServices.updateWinsAndLosses(
                             uid, team1, team2);
+                        String responseMessage = "Play Again";
+                        String alert;
+                        var bgColor = Color.fromARGB(255, 60, 186, 232);
+
+                        alert = "Team 1 Won!!";
+
+                        _showDialog(context, responseMessage, alert, bgColor);
                       },
                       icon: Icon(
                         Icons.ads_click_rounded,
@@ -161,6 +168,13 @@ class _MatchScreenState extends State<MatchScreen> {
                       onPressed: () async {
                         FirestoreServices.updateWinsAndLosses(
                             uid, team2, team1);
+                        String responseMessage = "Play Again";
+                        String alert;
+                        var bgColor = Color.fromARGB(255, 235, 123, 101);
+
+                        alert = "Team 2 Won!!";
+
+                        _showDialog(context, responseMessage, alert, bgColor);
                       },
                       icon: Icon(
                         Icons.ads_click_rounded,
