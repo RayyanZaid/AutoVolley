@@ -1,16 +1,13 @@
-# stat
+# Stat Tracker and Team Generator
 
-A new Flutter project.
+This web app uses Firebase with Flutter to provide an easy way for people to keep their pickup games organized. I implemented my own optimal team chooser algorithm so that it generates the teams in the most fair way possible.
 
-## Getting Started
+# User Authentication using Firebase Auth
+![Simulator Screen Shot - iPad mini (6th generation) - 2023-03-08 at 22 52 30](https://user-images.githubusercontent.com/85820569/223943637-d07c4f60-ffe5-4c84-b79d-bc5a0b0c7067.png)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+# Firestore Database
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<img width="1229" alt="image" src="https://user-images.githubusercontent.com/85820569/223944380-fdb11111-000c-4380-bff8-4ec081bcd92b.png">
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
