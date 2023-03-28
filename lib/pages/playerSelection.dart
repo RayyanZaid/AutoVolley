@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../algorithms/teams.dart';
 import '../classes/Player.dart';
@@ -36,11 +37,12 @@ class PlayerSelection extends StatefulWidget {
   final List<Player> playerList;
   final Map<String, dynamic> playerMapping;
   final String uid;
-
-  PlayerSelection(
-      {required this.playerList,
-      required this.playerMapping,
-      required this.uid});
+  AsyncSnapshot<User?>? snapshot;
+  PlayerSelection({
+    required this.playerList,
+    required this.playerMapping,
+    required this.uid,
+  });
 
   @override
   _PlayerSelectionState createState() => _PlayerSelectionState();
@@ -50,6 +52,7 @@ class _PlayerSelectionState extends State<PlayerSelection> {
   List<PlayerSelect> _playerListLocal = [];
   Map<String, dynamic> playerMapping = {};
   String uid = "";
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +109,7 @@ class _PlayerSelectionState extends State<PlayerSelection> {
                               GestureDetector(
                                 onTap: () {
                                   debugPrint("Selected");
+
                                   setState(() {
                                     _playerListLocal[index].isChosen =
                                         !_playerListLocal[index].isChosen;

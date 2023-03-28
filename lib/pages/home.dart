@@ -5,9 +5,10 @@ import './playerStats.dart';
 import '../classes/Player.dart';
 import '../services/firebaseFunctions.dart';
 import './playerSelection.dart';
+import '../globals.dart' as globals;
 
 class Home extends StatelessWidget {
-  final AsyncSnapshot<User?> snapshot;
+  final AsyncSnapshot<User?>? snapshot;
 
   const Home({Key? key, required this.snapshot}) : super(key: key);
 
@@ -21,6 +22,7 @@ class Home extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () async {
+                globals.snapshot = null;
                 await FirebaseAuth.instance.signOut();
               },
               icon: Icon(Icons.leave_bags_at_home))
@@ -45,8 +47,8 @@ class Home extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: Text(
-                  snapshot.data!.displayName != null
-                      ? '${snapshot.data!.displayName}'
+                  snapshot?.data!.displayName != null
+                      ? '${snapshot?.data!.displayName}'
                       : 'Welcome to your account',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -73,7 +75,7 @@ class Home extends StatelessWidget {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return AddNewPlayer(
-                              uid: snapshot.data!.uid,
+                              uid: snapshot!.data!.uid,
                             );
                           }));
                         },
@@ -89,12 +91,12 @@ class Home extends StatelessWidget {
                         onPressed: () async {
                           // get the list of players from the database
                           // sort that list
-
+                          debugPrint(snapshot.toString());
                           // put it in as a parameter for the PlayerStats page
                           List<Player> playerList = [];
                           Map<String, dynamic> firebaseList =
                               await FirestoreServices.getListOfPlayers(
-                                  snapshot.data!.uid);
+                                  snapshot!.data!.uid);
                           debugPrint(firebaseList.toString());
 
                           firebaseList.forEach((key, value) {
@@ -105,13 +107,14 @@ class Home extends StatelessWidget {
                                 value["winPercentage"].toString());
                             playerList.add(p);
                           });
-
+                          globals.snapshot = snapshot;
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return PlayerSelection(
-                                playerList: playerList,
-                                playerMapping: firebaseList,
-                                uid: snapshot.data!.uid);
+                              playerList: playerList,
+                              playerMapping: firebaseList,
+                              uid: snapshot!.data!.uid,
+                            );
                           }));
                         },
                         child: Text('Play Match'),
@@ -131,7 +134,7 @@ class Home extends StatelessWidget {
                           List<Player> playerList = [];
                           Map<String, dynamic> firebaseList =
                               await FirestoreServices.getListOfPlayers(
-                                  snapshot.data!.uid);
+                                  snapshot!.data!.uid);
                           debugPrint(firebaseList.toString());
 
                           firebaseList.forEach((key, value) {

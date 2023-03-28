@@ -1,14 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import "../classes/Player.dart";
 import "./playerStats.dart";
 import 'dart:math';
 import "../services/firebaseFunctions.dart";
+import "./home.dart";
+import '../globals.dart' as globals;
 
 class MatchScreen extends StatefulWidget {
   final List<Player> team1;
   final List<Player> team2;
   final String uid;
+
   MatchScreen(this.team1, this.team2, this.uid);
 
   @override
@@ -72,6 +76,7 @@ class _MatchScreenState extends State<MatchScreen> {
   List<Player> team1 = [];
   List<Player> team2 = [];
   String uid = "";
+  AsyncSnapshot<User?>? snapshot = globals.snapshot;
   @override
   void initState() {
     super.initState();
@@ -117,11 +122,11 @@ class _MatchScreenState extends State<MatchScreen> {
             textColor: Colors.black,
             onPressed: () =>
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return PlayerStats(playerList: team1 + team2);
+              return Home(
+                snapshot: snapshot,
+              );
             })),
-            child: Icon(
-              Icons.home,
-            ),
+            child: Icon(Icons.home),
           ),
           actions: <Widget>[],
         ),
