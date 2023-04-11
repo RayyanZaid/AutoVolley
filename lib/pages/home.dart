@@ -6,6 +6,7 @@ import '../classes/Player.dart';
 import '../services/firebaseFunctions.dart';
 import './playerSelection.dart';
 import '../globals.dart' as globals;
+import '../pages/profile.dart';
 
 class Home extends StatelessWidget {
   final AsyncSnapshot<User?>? snapshot;
@@ -19,14 +20,7 @@ class Home extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () async {
-                globals.snapshot = null;
-                await FirebaseAuth.instance.signOut();
-              },
-              icon: Icon(Icons.leave_bags_at_home))
-        ],
+        actions: [],
         title: Text('Home'),
       ),
       body: Column(
@@ -72,6 +66,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: ElevatedButton(
                         onPressed: () async {
+                          debugPrint(snapshot!.data!.uid.toString());
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return AddNewPlayer(
@@ -157,22 +152,34 @@ class Home extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('View Account Info'),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(200.0, 60.0),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () async {
+                globals.snapshot = null;
+                await FirebaseAuth.instance.signOut();
+              },
+              child: Text("Logout"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ProfilePage();
+                }));
+              },
+              child: Text("View/Edit Account Info"),
+            ),
+          ],
+        ),
       ),
     );
   }

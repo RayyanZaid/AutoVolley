@@ -10,6 +10,19 @@ class FirestoreServices {
         .set({'email': email, 'name': name});
   }
 
+  static Future<void> deleteCollection(String uid) async {
+    final collectionRef = FirebaseFirestore.instance.collection(uid);
+    final batch = FirebaseFirestore.instance.batch();
+    final querySnapshot = await collectionRef.get();
+
+    querySnapshot.docs.forEach((doc) {
+      batch.delete(doc.reference);
+    });
+
+    await batch.commit();
+    await collectionRef.doc().delete(); // Delete the empty collection
+  }
+
   static addNewPlayer(String name, uid) async {
     try {
       final playerDoc = FirebaseFirestore.instance

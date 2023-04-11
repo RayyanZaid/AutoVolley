@@ -14,7 +14,7 @@ class _LoginFormState extends State<LoginForm> {
   String email = '';
   String password = '';
   String fullname = '';
-  bool login = false;
+  bool login = true;
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +103,12 @@ class _LoginFormState extends State<LoginForm> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        login
-                            ? AuthServices.signinUser(email, password, context)
-                            : AuthServices.signupUser(
-                                email, password, fullname, context);
+                        if (login) {
+                          AuthServices.signinUser(email, password, context);
+                        } else {
+                          AuthServices.signupUser(
+                              email, password, fullname, context);
+                        }
                       }
                     },
                     child: Text(login ? 'Login' : 'Signup')),
